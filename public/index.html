@@ -6,5 +6,21 @@
 </head>
 <body>
     <p>Welcome to our chat app!</p>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js">
+
+    </script>
+    <script type="text/javascript">
+      var socket = io(); // initialing request from client
+
+      // wanna listen on event, 1st agru is event name then call back func
+      socket.on('connect', () => {
+        console.log('From client saying: Connected to server');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('From client saying: Disconnected server!!');
+      });
+    </script>
 </body>
 </html>
