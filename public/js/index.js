@@ -5,12 +5,12 @@ socket.on('connect', function() {
   console.log('From client saying: Connected to server');
 
   // emit need to be under connect
-  //client sending email to server
-  socket.emit('createMessage_client', {
-    to: 'menu@yahoo.com',
-    text: 'Client says to server hallooo!'
-  });
-});
+  // client sending email to server
+        // socket.emit('createMessage_client', {
+        //   from: 'Andrew',
+        //   text: 'Hey. This Andrew.. from index js'
+        // });
+      });
 
 socket.on('disconnect', function() {
   console.log('From client saying: Disconnected server!!');
