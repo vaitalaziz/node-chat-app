@@ -5,7 +5,7 @@ socket.on('connect', function() {
   console.log('From client saying: Connected to server');
 
   // emit need to be under connect
-  // client sending email to server
+  // client sending message to server
         // socket.emit('createMessage_client', {
         //   from: 'Andrew',
         //   text: 'Hey. This Andrew.. from index js'
@@ -16,7 +16,7 @@ socket.on('disconnect', function() {
   console.log('From client saying: Disconnected server!!');
 });
 
-// receving email from server by client
+// receving message from server by client
 socket.on('createMessage_server', function(msgRcvClient){
   console.log('Msg Rcv Client: ', msgRcvClient);
 });
