@@ -7,8 +7,8 @@ socket.on('connect', function() {
   // emit need to be under connect
   // client sending message to server
         // socket.emit('createMessage_client', {
-        //   from: 'Andrew',
-        //   text: 'Hey. This Andrew.. from index js'
+        //   from: 'Aziz',
+        //   text: 'Hey. This Aziz.. from index js'
         // });
       });
 
