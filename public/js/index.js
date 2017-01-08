@@ -19,4 +19,26 @@ socket.on('disconnect', function() {
 // receving message from server by client
 socket.on('createMessage_server', function(msgRcvClient){
   console.log('Msg Rcv Client: ', msgRcvClient);
+  var li = jQuery('<li></li>');
+  li.text(`${msgRcvClient.from}: ${msgRcvClient.text}`);
+
+  jQuery('#messages').append(li);
+});
+
+// socket.emit('createMessage_client', {
+//   from: 'Apon Aziz', //
+//   text: 'hi' //
+// }, function(data) { // function callback for acknowledgement ,, data receving value from server
+//   console.log('Client says Informed!', data); //
+// });
+
+jQuery('#message-form').on('submit', function (e) {
+  e.preventDefault(); // prevent the default behavior
+
+  socket.emit('createMessage_client', {
+    from: 'User',
+    text: jQuery('[name=message]').val()
+  }, function () {
+
+  });
 });

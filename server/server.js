@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
   //*** io.emit -> emits to every single connection ***
   // server receving email from client
-  socket.on('createMessage_client', (msgRecvServer) =>{
+  socket.on('createMessage_client', (msgRecvServer, callback) =>{
     console.log('Msg Recv Server:', msgRecvServer);
     //io.emit-> server forwarding the receving msg to all clients/connection
         // io.emit('createMessage_server', {
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
         //   createAt: new Date().getTime()
         // });
         io.emit('createMessage_server', generateMessage(msgRecvServer.from, msgRecvServer.text));
-
+        callback("Server said done!"); // trigered callback to client with given some date
 
 
     // broadcast allows to send msg to all except the msg sender
