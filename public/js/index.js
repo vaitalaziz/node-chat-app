@@ -25,6 +25,17 @@ socket.on('createMessage_server', function(msgRcvClient){
   jQuery('#messages').append(li);
 });
 
+  socket.on('newLocation_server', function(msgRcvClient) {
+    var li = jQuery('<li></li>');
+    var a = jQuery('<a target="_blank">My current location</a>');
+
+    li.text(`${msgRcvClient.from}: `);
+    a.attr('href', msgRcvClient.url);
+    li.append(a);
+    jQuery('#messages').append(li);
+  });
+
+
 // socket.emit('createMessage_client', {
 //   from: 'Apon Aziz', //
 //   text: 'hi' //
@@ -40,5 +51,24 @@ jQuery('#message-form').on('submit', function (e) {
     text: jQuery('[name=message]').val()
   }, function () {
 
+  });
+});
+
+
+//location sending
+var locationButton = jQuery('#send-location');
+locationButton.on('click', function () {
+  if(!navigator.geolocation) {
+    return alert('Geolocation not supported by ur browser.');
+  }
+  navigator.geolocation.getCurrentPosition(function (position) {
+      //console.log(position);
+      //new event 'creatgeLocationClient' registration
+      socket.emit('creategeoLocationClient', {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+  }, function () {
+    alert('Unable to fetch location');
   });
 });

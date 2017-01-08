@@ -3,7 +3,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
 //console.log(publicPath);
 
@@ -25,7 +25,6 @@ io.on('connection', (socket) => {
     //   text: 'Welcome to our Chat!'
     // });
     socket.emit('createMessage_server', generateMessage('Admin', 'Welcome to our Chat App!'));
-
 
   // socket.broadcast.emit Admin text new user Joined
     //  socket.broadcast.emit('createMessage_server', {
@@ -66,8 +65,14 @@ io.on('connection', (socket) => {
       //   text: msgRecvServer.text,
       //   createAt: new Date().getTime()
       // });
+});
+      socket.on('creategeoLocationClient', (coords) => {
+        // io.emit('createMessage_server', generateMessage('Admin',
+        //             `${coords.latitude}, ${coords.longitude}`) );
+        io.emit('newLocation_server', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+      });
 
-  });
+
 
   // if user disconnect then server respond here
   socket.on('disconnect', () => {
