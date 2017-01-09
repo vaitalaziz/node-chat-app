@@ -18,18 +18,20 @@ socket.on('disconnect', function() {
 
 // receving message from server by client
 socket.on('createMessage_server', function(msgRcvClient){
-  console.log('Msg Rcv Client: ', msgRcvClient);
+  //console.log('Msg Rcv Client: ', msgRcvClient);
+  var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
   var li = jQuery('<li></li>');
-  li.text(`${msgRcvClient.from}: ${msgRcvClient.text}`);
+  li.text(`${msgRcvClient.from} ${formattedTime}: ${msgRcvClient.text}`);
 
   jQuery('#messages').append(li);
 });
 
   socket.on('newLocation_server', function(msgRcvClient) {
+    var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
     var li = jQuery('<li></li>');
     var a = jQuery('<a target="_blank">My current location</a>');
 
-    li.text(`${msgRcvClient.from}: `);
+    li.text(`${msgRcvClient.from} ${formattedTime}: `);
     a.attr('href', msgRcvClient.url);
     li.append(a);
     jQuery('#messages').append(li);
