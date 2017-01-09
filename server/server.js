@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
         // });
         io.emit('createMessage_server', generateMessage(msgRecvServer.from, msgRecvServer.text));
         callback("Server said done!"); // trigered callback to client with given some date
-
+      //  callback("");
 
     // broadcast allows to send msg to all except the msg sender
       // socket.broadcast.emit('createMessage_server', {
