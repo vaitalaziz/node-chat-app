@@ -1,5 +1,23 @@
 var socket = io(); // initialing request from client
 
+function scrollToBottom () {
+  // Selectors
+  var messages = jQuery('#messages');
+  var newMessage = messages.children('li:last-child');// last list iteam, means after the iteam needs scrolling
+  //Heights
+  var clientHeight = messages.prop('clientHeight');
+  var scrollTop = messages.prop('scrollTop');
+  var scrollHeight = messages.prop('scrollHeight');
+  var newMessageHeight = newMessage.innerHeight(); // it counts height of the msg & padding also applied in css.
+  var lastMessageHeight = newMessage.prev().innerHeight();// 2nd last list iteam
+
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    //console.log('Scroll down it');
+    messages.scrollTop(scrollHeight); 
+  }
+}
+
 // wanna listen on event, 1st agru is event name then call back func
 socket.on('connect', function() {
   console.log('From client saying: Connected to server');
@@ -35,6 +53,7 @@ socket.on('createMessage_server', function(msgRcvClient){
   });
 
   jQuery('#messages').append(html);
+  scrollToBottom();
 
 });
 
@@ -57,6 +76,7 @@ socket.on('createMessage_server', function(msgRcvClient){
     });
 
     jQuery('#messages').append(html);
+    scrollToBottom();
   });
 
 
