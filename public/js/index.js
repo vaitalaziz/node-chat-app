@@ -18,23 +18,45 @@ socket.on('disconnect', function() {
 
 // receving message from server by client
 socket.on('createMessage_server', function(msgRcvClient){
-  //console.log('Msg Rcv Client: ', msgRcvClient);
-  var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
-  var li = jQuery('<li></li>');
-  li.text(`${msgRcvClient.from} ${formattedTime}: ${msgRcvClient.text}`);
+  // //console.log('Msg Rcv Client: ', msgRcvClient);
+  // var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
+  // var li = jQuery('<li></li>');
+  // li.text(`${msgRcvClient.from} ${formattedTime}: ${msgRcvClient.text}`);
+  //
+  // jQuery('#messages').append(li);
 
-  jQuery('#messages').append(li);
+  // above code was fine but commented for mustache implement testing
+  var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
+  var template = jQuery('#message-template').html();
+  var html = Mustache.render(template, {
+    text: msgRcvClient.text,
+    from: msgRcvClient.from,
+    createdAt: formattedTime
+  });
+
+  jQuery('#messages').append(html);
+
 });
 
   socket.on('newLocation_server', function(msgRcvClient) {
-    var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    var a = jQuery('<a target="_blank">My current location</a>');
+    // var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
+    // var li = jQuery('<li></li>');
+    // var a = jQuery('<a target="_blank">My current location</a>');
+    //
+    // li.text(`${msgRcvClient.from} ${formattedTime}: `);
+    // a.attr('href', msgRcvClient.url);
+    // li.append(a);
+    // jQuery('#messages').append(li);
 
-    li.text(`${msgRcvClient.from} ${formattedTime}: `);
-    a.attr('href', msgRcvClient.url);
-    li.append(a);
-    jQuery('#messages').append(li);
+    var formattedTime = moment(msgRcvClient.createdAt).format('h:mm a');
+    var template = jQuery('#location-message-template').html();
+    var html = Mustache.render(template, {
+      from: msgRcvClient.from,
+      createdAt: formattedTime,
+      url: msgRcvClient.url
+    });
+
+    jQuery('#messages').append(html);
   });
 
 
