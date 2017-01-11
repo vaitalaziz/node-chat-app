@@ -2,7 +2,7 @@ var expect = require('expect');
 
 var {generateMessage, generateLocationMessage} = require('./message');
 
-describe('generateMessage', () => {
+describe('generateMessage::', () => {
   it('should generate correct message object', () => {
     var from = 'Aziz';
     var text = 'Say something....';
@@ -10,7 +10,7 @@ describe('generateMessage', () => {
 
     //expect(message.from).toBe(from);
     expect(message).toInclude({from, text}); // from : from, text : text
-    expect(message.createAt).toBeA('number');
+    expect(message.createdAt).toBeA('number');
   });
 });
 

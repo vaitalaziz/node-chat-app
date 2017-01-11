@@ -4,6 +4,9 @@ const http = require('http');
 const socketIO = require('socket.io');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {Users} = require ('./utils/users');
+const{isRealString} = require('./utils/validation');
+
 const publicPath = path.join(__dirname, '../public');
 //console.log(publicPath);
 
@@ -11,6 +14,7 @@ const port = process.env.PORT || 2000;
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
+var users = new Users();
 
 app.use(express.static(publicPath));
 
@@ -24,14 +28,15 @@ io.on('connection', (socket) => {
     //   from: 'Admin',
     //   text: 'Welcome to our Chat!'
     // });
-    socket.emit('createMessage_server', generateMessage('Admin', 'Welcome to our Chat App!'));
+
+//socket.emit('createMessage_server', generateMessage('Admin', 'Welcome to our Chat App!'));
 
   // socket.broadcast.emit Admin text new user Joined
     //  socket.broadcast.emit('createMessage_server', {
     //    from: 'Admin',
     //    text: 'New User Join'
     //  });
-    socket.broadcast.emit('createMessage_server', generateMessage('Admin','New User Join'));
+//socket.broadcast.emit('createMessage_server', generateMessage('Admin','New User Join'));
 
 
   //*** socket.emit connect to single connection ***
@@ -42,6 +47,30 @@ io.on('connection', (socket) => {
         //   text: 'From server to Hallo Aziz....',
         //   createAt: 123
         // });
+
+   // passing params object and call for acknowledgement
+   // 1st validate data e.g not empty string or number ..
+   socket.on('join', (params, callback) => {
+     if (!isRealString(params.name) || !isRealString(params.room)) {
+       return callback('Name & room name are required!');
+     }
+
+     socket.join(params.room);
+     users.removeUser(socket.id);
+     users.addUser(socket.id, params.name, params.room);
+
+     // passing to the room name and updating user list
+     io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+     // socket.leave('The Office Fans');
+
+    // io.emit -> io.to('The Office Fans').emit
+    // socket.broadcast.emit -> socket.broadcast.to('The Office Fans').emit
+    // socket.emit
+
+     socket.emit('createMessage_server', generateMessage('Admin', 'Welcome to our Chat App!'));
+     socket.broadcast.to(params.room).emit('createMessage_server', generateMessage('Admin', `${params.name} has joined.`));
+     callback();
+   });
 
 
   //*** io.emit -> emits to every single connection ***
@@ -76,7 +105,13 @@ io.on('connection', (socket) => {
 
   // if user disconnect then server respond here
   socket.on('disconnect', () => {
-    console.log('Server saying: user disconnected now');
+    //console.log('Server saying: user disconnected now');
+    var user = users.removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('createMessage_server', generateMessage('Admin', `${user.name} has left.`) );
+    }
   });
 
 });

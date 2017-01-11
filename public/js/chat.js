@@ -14,24 +14,49 @@ function scrollToBottom () {
 
   if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
     //console.log('Scroll down it');
-    messages.scrollTop(scrollHeight); 
+    messages.scrollTop(scrollHeight);
   }
 }
 
 // wanna listen on event, 1st agru is event name then call back func
 socket.on('connect', function() {
-  console.log('From client saying: Connected to server');
+    //console.log('From client saying: Connected to server');
 
-  // emit need to be under connect
-  // client sending message to server
-        // socket.emit('createMessage_client', {
-        //   from: 'Aziz',
-        //   text: 'Hey. This Aziz.. from index js'
-        // });
-      });
+    //
+    var params = jQuery.deparam(window.location.search);
+    // certain people can emits & listens by "socket.io join"
+    socket.emit('join', params, function (err) {
+      if (err) {
+        alert(err);
+        window.location.href = '/';
+      } else {
+        console.log('Alles gut!');
+        //who else join in chat room to know
+
+      }
+    });
+
+    // emit need to be under connect
+    // client sending message to server
+          // socket.emit('createMessage_client', {
+          //   from: 'Aziz',
+          //   text: 'Hey. This Aziz.. from index js'
+          // });
+});
 
 socket.on('disconnect', function() {
   console.log('From client saying: Disconnected server!!');
+});
+
+socket.on('updateUserList', function(users) {
+  //console.log('Users List:: ', users);
+  var ol = jQuery('<ol></ol>');
+
+  users.forEach(function (user) {
+    ol.append(jQuery('<li></li>').text(user));
+  });
+
+  jQuery('#users').html(ol); 
 });
 
 // receving message from server by client
